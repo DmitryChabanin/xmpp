@@ -114,7 +114,8 @@ namespace XMPP.tags.jabber.client
             subscribed,
             unavailable,
             unsubscribe,
-            unsubscribed
+            unsubscribed,
+            available
         }
 
 		public string from { get { return (string)GetAttributeValue("from"); } set { SetAttributeValue("from", value); } }

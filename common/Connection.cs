@@ -221,8 +221,8 @@ namespace XMPP.common
 
             if (synchronized) // Wait for completion
             {
-                _elevateMutex.WaitOne(4000);
-                _socket.OutputStream.WriteAsync(sendBuffer).AsTask().Wait(4000);
+                _elevateMutex.WaitOne(-1);
+                _socket.OutputStream.WriteAsync(sendBuffer).AsTask().Wait(-1);
             }
             else // wait for last task and start new one
             {
@@ -231,7 +231,7 @@ namespace XMPP.common
                 {
                     try
                     {
-                        _socketWriter.AsTask().Wait(4000);
+                        _socketWriter.AsTask().Wait(-1);
                     }
                     catch
                     {
@@ -243,7 +243,7 @@ namespace XMPP.common
                     }
                 }
 
-                _elevateMutex.WaitOne(4000);
+                _elevateMutex.WaitOne(-1);
 
                 if (IsConnected)
                 {
@@ -259,7 +259,7 @@ namespace XMPP.common
             {
 
                 if (!IsConnected) return;
-                _elevateMutex.WaitOne(4000);
+                _elevateMutex.WaitOne(-1);
 
                 _socketReader = _socket.InputStream.ReadAsync(_socketReadBuffer, _bufferSize, InputStreamOptions.Partial);
                 _socketReader.Completed = OnSocketReaderCompleted;
@@ -284,7 +284,7 @@ namespace XMPP.common
             {
                 try
                 {
-                    _socketWriter.AsTask().Wait(4000);
+                    _socketWriter.AsTask().Wait(-1);
                 }
                 catch
                 {
@@ -314,8 +314,6 @@ namespace XMPP.common
             if (_socketElevator != null) _socketElevator.Cancel();
             if (_socketReader != null) _socketReader.Cancel();
             if (_socketWriter != null) _socketWriter.Cancel();
-
-            _socket.Dispose();
         }
 
         private void ConnectionError(ErrorType type, ErrorPolicyType policy, string cause = "")
